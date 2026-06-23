@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – Seven Coworking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #0A0A0A;
+      --gray-900: #111;
+      --gray-700: #3a3a3a;
+      --gray-500: #6b6b6b;
+      --gray-200: #e5e5e5;
+      --gray-100: #f5f5f7;
+      --white: #fff;
+      --gold: #B8993A;
+      --green: #16a34a;
+      --red: #dc2626;
+      --radius: 12px;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--black); min-height: 100vh; }
+
+    /* LOGIN */
+    #login-screen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 24px;
+    }
+    .login-card {
+      background: var(--white); border-radius: 20px; padding: 48px 40px;
+      width: 100%; max-width: 420px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.1);
+    }
+    .login-logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 8px; }
+    .login-logo span { color: var(--gold); }
+    .login-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; }
+    .login-card p { font-size: 0.85rem; color: var(--gray-500); margin-bottom: 28px; line-height: 1.6; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: var(--gray-700); }
+    .field input {
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--gray-200);
+      border-radius: 10px; font-size: 0.9rem; font-family: inherit;
+      transition: border-color 0.2s; outline: none;
+    }
+    .field input:focus { border-color: var(--gold); }
+    .field small { display: block; margin-top: 6px; font-size: 0.75rem; color: var(--gray-500); }
+    .btn-login {
+      width: 100%; padding: 14px; background: var(--black); color: var(--white);
+      border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; margin-top: 8px; font-family: inherit; transition: background 0.2s;
+    }
+    .btn-login:hover { background: var(--gray-700); }
+    .login-help { margin-top: 20px; padding: 16px; background: var(--gray-100); border-radius: 10px; font-size: 0.78rem; color: var(--gray-500); line-height: 1.6; }
+    .login-help a { color: var(--gold); }
+
+    /* ADMIN */
+    #admin-screen { display: none; }
+    .topbar {
+      background: var(--white); border-bottom: 1px solid var(--gray-200);
+      padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-logo { font-size: 1rem; font-weight: 800; letter-spacing: -0.04em; }
+    .topbar-logo span { color: var(--gold); }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-right span { font-size: 0.8rem; color: var(--gray-500); }
+    .btn-sm {
+      padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; border: none; font-family: inherit; transition: all 0.2s;
+    }
+    .btn-save { background: var(--black); color: var(--white); }
+    .btn-save:hover { background: var(--gray-700); }
+    .btn-publish { background: var(--gold); color: var(--white); }
+    .btn-publish:hover { background: #a07c28; }
+    .btn-logout { background: transparent; color: var(--gray-500); border: 1px solid var(--gray-200); }
+    .btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+    .admin-body { display: flex; min-height: calc(100vh - 60px); }
+    .sidebar {
+      width: 220px; background: var(--white); border-right: 1px solid var(--gray-200);
+      padding: 24px 0; flex-shrink: 0; position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto;
+    }
+    .sidebar-section { padding: 0 16px; margin-bottom: 8px; }
+    .sidebar-section p { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-500); margin-bottom: 8px; padding: 0 8px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px; padding: 9px 12px;
+      border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500;
+      color: var(--gray-700); transition: all 0.15s; margin-bottom: 2px;
+    }
+    .nav-item:hover { background: var(--gray-100); color: var(--black); }
+    .nav-item.active { background: var(--gray-100); color: var(--black); font-weight: 600; }
+    .nav-item svg { flex-shrink: 0; }
+
+    .content { flex: 1; padding: 32px; max-width: 860px; }
+    .section-panel { display: none; }
+    .section-panel.active { display: block; }
+    .panel-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+    .panel-subtitle { font-size: 0.85rem; color: var(--gray-500); margin-bottom: 28px; }
+
+    .card { background: var(--white); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; border: 1px solid var(--gray-200); }
+    .card h3 { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gray-500); margin-bottom: 20px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-field { margin-bottom: 18px; }
+    .form-field:last-child { margin-bottom: 0; }
+    .form-field label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: var(--gray-700); }
+    .form-field input, .form-field textarea {
+      width: 100%; padding: 10px 13px; border: 1.5px solid var(--gray-200);
+      border-radius: 8px; font-size: 0.875rem; font-family: inherit;
+      transition: border-color 0.2s; outline: none; color: var(--black);
+    }
+    .form-field input:focus, .form-field textarea:focus { border-color: var(--gold); }
+    .form-field textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+    .img-upload-area {
+      border: 2px dashed var(--gray-200); border-radius: 10px; padding: 32px;
+      text-align: center; cursor: pointer; transition: all 0.2s; position: relative;
+    }
+    .img-upload-area:hover { border-color: var(--gold); background: #fdfaf3; }
+    .img-upload-area input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .img-upload-area p { font-size: 0.85rem; color: var(--gray-500); margin-top: 8px; }
+    .img-upload-area strong { font-size: 0.9rem; color: var(--black); }
+    .img-preview { width: 100%; max-height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; display: none; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 999;
+      padding: 14px 20px; border-radius: 10px; font-size: 0.875rem; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+      transform: translateY(80px); opacity: 0; transition: all 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--green); color: var(--white); }
+    .toast.error { background: var(--red); color: var(--white); }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; font-weight: 600; padding: 4px 10px;
+      border-radius: 50px; background: #dcfce7; color: var(--green);
+    }
+    .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+    .preview-link { font-size: 0.8rem; color: var(--gold); text-decoration: none; }
+    .preview-link:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .content { padding: 20px; }
+      .form-row { grid-template-columns: 1fr; }
+      .topbar { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">SEVEN<span>COWORKING</span></div>
+    <br/>
+    <h2>Painel Administrativo</h2>
+    <p>Para editar o site, entre com seu Token do GitHub. Ele permite salvar as alterações diretamente.</p>
+    <div class="field">
+      <label>Repositório GitHub</label>
+      <input type="text" id="inp-repo" placeholder="vitorcoutinho-cell/sevencoworking" value="vitorcoutinho-cell/sevencoworking" />
+    </div>
+    <div class="field">
+      <label>Token de Acesso (GitHub Personal Access Token)</label>
+      <input type="password" id="inp-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+      <small>Seus dados ficam salvos apenas no seu navegador.</small>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Entrar no Painel</button>
+    <div class="login-help">
+      Não tem um token? <a href="https://github.com/settings/tokens/new?scopes=repo&description=SevenCoworking+Admin" target="_blank">Clique aqui para criar</a> — selecione o escopo <strong>repo</strong> e clique em "Generate token".
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="topbar-logo">SEVEN<span>COWORKING</span></div>
+      <span class="status-badge" id="status-badge">Online</span>
+    </div>
+    <div class="topbar-right">
+      <a class="preview-link" href="https://sevencoworking.com.br" target="_blank">↗ Ver site</a>
+      <button class="btn-sm btn-save" onclick="saveContent()">Salvar rascunho</button>
+      <button class="btn-sm btn-publish" onclick="publishContent()">Publicar no site</button>
+      <button class="btn-sm btn-logout" onclick="doLogout()">Sair</button>
+    </div>
+  </div>
+  <div class="admin-body">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <p>Conteúdo</p>
+        <div class="nav-item active" onclick="showPanel('hero', this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          Hero (topo)
+        </div>
+        <div class="nav-item" onclick="showPanel('sobre', this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Sobre
+        </div>
+        <div class="nav-item" onclick="showPanel('servicos', this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg>
+          Serviços
+        </div>
+        <div class="nav-item" onclick="showPanel('imagens', this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Imagens
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <p>Configurações</p>
+        <div class="nav-item" onclick="showPanel('contato', this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.07 8.63a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+          Contato & Redes
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- HERO -->
+      <div class="section-panel active" id="panel-hero">
+        <div class="panel-title">Hero — Topo do site</div>
+        <div class="panel-subtitle">Primeira seção que o visitante vê ao entrar no site.</div>
+        <div class="card">
+          <h3>Textos principais</h3>
+          <div class="form-field">
+            <label>Badge (texto pequeno do topo)</label>
+            <input type="text" id="hero.badge" />
+          </div>
+          <div class="form-field">
+            <label>Título principal</label>
+            <input type="text" id="hero.title" />
+          </div>
+          <div class="form-field">
+            <label>Subtítulo</label>
+            <textarea id="hero.subtitle"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Botão principal</label>
+              <input type="text" id="hero.btn_primary" />
+            </div>
+            <div class="form-field">
+              <label>Botão secundário</label>
+              <input type="text" id="hero.btn_secondary" />
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Estatísticas</h3>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Número 1</label>
+              <input type="text" id="hero.stat1_num" />
+            </div>
+            <div class="form-field">
+              <label>Legenda 1</label>
+              <input type="text" id="hero.stat1_label" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Número 2</label>
+              <input type="text" id="hero.stat2_num" />
+            </div>
+            <div class="form-field">
+              <label>Legenda 2</label>
+              <input type="text" id="hero.stat2_label" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Número 3</label>
+              <input type="text" id="hero.stat3_num" />
+            </div>
+            <div class="form-field">
+              <label>Legenda 3</label>
+              <input type="text" id="hero.stat3_label" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOBRE -->
+      <div class="section-panel" id="panel-sobre">
+        <div class="panel-title">Sobre</div>
+        <div class="panel-subtitle">Seção "Mais do que um coworking".</div>
+        <div class="card">
+          <h3>Textos</h3>
+          <div class="form-field">
+            <label>Label (texto pequeno)</label>
+            <input type="text" id="sobre.label" />
+          </div>
+          <div class="form-field">
+            <label>Título</label>
+            <input type="text" id="sobre.title" />
+          </div>
+          <div class="form-field">
+            <label>Parágrafo 1</label>
+            <textarea id="sobre.text1"></textarea>
+          </div>
+          <div class="form-field">
+            <label>Parágrafo 2</label>
+            <textarea id="sobre.text2"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVIÇOS -->
+      <div class="section-panel" id="panel-servicos">
+        <div class="panel-title">Serviços</div>
+        <div class="panel-subtitle">Os 3 cards de serviços oferecidos.</div>
+        <div class="card">
+          <h3>Sala de Reunião</h3>
+          <div class="form-field">
+            <label>Título</label>
+            <input type="text" id="servicos.s1_title" />
+          </div>
+          <div class="form-field">
+            <label>Descrição</label>
+            <textarea id="servicos.s1_desc"></textarea>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Sala Privativa</h3>
+          <div class="form-field">
+            <label>Título</label>
+            <input type="text" id="servicos.s2_title" />
+          </div>
+          <div class="form-field">
+            <label>Descrição</label>
+            <textarea id="servicos.s2_desc"></textarea>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Endereço Fiscal</h3>
+          <div class="form-field">
+            <label>Título</label>
+            <input type="text" id="servicos.s3_title" />
+          </div>
+          <div class="form-field">
+            <label>Descrição</label>
+            <textarea id="servicos.s3_desc"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- IMAGENS -->
+      <div class="section-panel" id="panel-imagens">
+        <div class="panel-title">Imagens</div>
+        <div class="panel-subtitle">Fotos exibidas no site. Tamanho recomendado: mínimo 1200px de largura.</div>
+        <div class="card">
+          <h3>Foto do Hero (topo)</h3>
+          <img class="img-preview" id="preview-hero" />
+          <div class="img-upload-area" onclick="document.getElementById('file-hero').click()">
+            <input type="file" id="file-hero" accept="image/*" onchange="handleImage(this,'hero','preview-hero')" />
+            <svg width="32" height="32" fill="none" stroke="#B8993A" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <p><strong>Clique para selecionar</strong><br/>JPG, PNG ou WebP</p>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Foto do Sobre</h3>
+          <img class="img-preview" id="preview-sobre" />
+          <div class="img-upload-area" onclick="document.getElementById('file-sobre').click()">
+            <input type="file" id="file-sobre" accept="image/*" onchange="handleImage(this,'sobre','preview-sobre')" />
+            <svg width="32" height="32" fill="none" stroke="#B8993A" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <p><strong>Clique para selecionar</strong><br/>JPG, PNG ou WebP</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTATO -->
+      <div class="section-panel" id="panel-contato">
+        <div class="panel-title">Contato & Redes Sociais</div>
+        <div class="panel-subtitle">Informações de contato exibidas no rodapé e usadas nos botões do site.</div>
+        <div class="card">
+          <h3>WhatsApp</h3>
+          <div class="form-field">
+            <label>Número completo com DDI e DDD (só números)</label>
+            <input type="text" id="contato.whatsapp" placeholder="5544999999999" />
+          </div>
+          <div class="form-field">
+            <label>Número exibido no site</label>
+            <input type="text" id="contato.telefone" placeholder="(44) 9 9999-9999" />
+          </div>
+        </div>
+        <div class="card">
+          <h3>Redes e E-mail</h3>
+          <div class="form-field">
+            <label>Instagram (só o @, sem o @)</label>
+            <input type="text" id="contato.instagram" placeholder="sevencoworking" />
+          </div>
+          <div class="form-field">
+            <label>E-mail</label>
+            <input type="text" id="contato.email" placeholder="contato@sevencoworking.com.br" />
+          </div>
+        </div>
+        <div class="card">
+          <h3>Endereço</h3>
+          <div class="form-field">
+            <label>Endereço completo</label>
+            <textarea id="contato.endereco"></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  let state = {};
+  let githubToken = '';
+  let githubRepo = '';
+  let contentSha = '';
+
+  // ── AUTH ──
+  function doLogin() {
+    githubToken = document.getElementById('inp-token').value.trim();
+    githubRepo  = document.getElementById('inp-repo').value.trim();
+    if (!githubToken || !githubRepo) { showToast('Preencha todos os campos.', 'error'); return; }
+    localStorage.setItem('sc_token', githubToken);
+    localStorage.setItem('sc_repo',  githubRepo);
+    loadFromGithub();
+  }
+
+  function doLogout() {
+    localStorage.removeItem('sc_token');
+    localStorage.removeItem('sc_repo');
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('admin-screen').style.display = 'none';
+  }
+
+  // ── PANELS ──
+  function showPanel(name, el) {
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    el.classList.add('active');
+  }
+
+  // ── LOAD ──
+  async function loadFromGithub() {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${githubRepo}/contents/content.json`, {
+        headers: { Authorization: `token ${githubToken}`, Accept: 'application/vnd.github.v3+json' }
+      });
+      if (!res.ok) throw new Error('Não foi possível carregar o conteúdo do GitHub.');
+      const data = await res.json();
+      contentSha = data.sha;
+      state = JSON.parse(atob(data.content.replace(/\n/g, '')));
+      populateFields();
+      showAdmin();
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  function populateFields() {
+    function set(id, val) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.tagName === 'TEXTAREA') el.value = val || '';
+      else el.value = val || '';
+    }
+    // hero
+    Object.keys(state.hero || {}).forEach(k => set('hero.' + k, state.hero[k]));
+    Object.keys(state.sobre || {}).forEach(k => set('sobre.' + k, state.sobre[k]));
+    Object.keys(state.servicos || {}).forEach(k => set('servicos.' + k, state.servicos[k]));
+    Object.keys(state.contato || {}).forEach(k => set('contato.' + k, state.contato[k]));
+    // images
+    if (state.imagens?.hero) {
+      const pr = document.getElementById('preview-hero');
+      pr.src = state.imagens.hero; pr.style.display = 'block';
+    }
+    if (state.imagens?.sobre) {
+      const pr = document.getElementById('preview-sobre');
+      pr.src = state.imagens.sobre; pr.style.display = 'block';
+    }
+  }
+
+  function collectFields() {
+    function get(id) {
+      const el = document.getElementById(id);
+      return el ? el.value : '';
+    }
+    state.hero = {
+      badge: get('hero.badge'), title: get('hero.title'), subtitle: get('hero.subtitle'),
+      btn_primary: get('hero.btn_primary'), btn_secondary: get('hero.btn_secondary'),
+      stat1_num: get('hero.stat1_num'), stat1_label: get('hero.stat1_label'),
+      stat2_num: get('hero.stat2_num'), stat2_label: get('hero.stat2_label'),
+      stat3_num: get('hero.stat3_num'), stat3_label: get('hero.stat3_label'),
+    };
+    state.sobre = {
+      label: get('sobre.label'), title: get('sobre.title'),
+      text1: get('sobre.text1'), text2: get('sobre.text2'),
+    };
+    state.servicos = {
+      s1_title: get('servicos.s1_title'), s1_desc: get('servicos.s1_desc'),
+      s2_title: get('servicos.s2_title'), s2_desc: get('servicos.s2_desc'),
+      s3_title: get('servicos.s3_title'), s3_desc: get('servicos.s3_desc'),
+    };
+    state.contato = {
+      whatsapp: get('contato.whatsapp'), email: get('contato.email'),
+      instagram: get('contato.instagram'), endereco: get('contato.endereco'),
+      telefone: get('contato.telefone'),
+    };
+  }
+
+  function saveContent() {
+    collectFields();
+    localStorage.setItem('sc_draft', JSON.stringify(state));
+    showToast('Rascunho salvo localmente!', 'success');
+  }
+
+  async function publishContent() {
+    collectFields();
+    try {
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
+      const body = {
+        message: 'Admin: atualiza conteúdo do site',
+        content,
+        sha: contentSha,
+      };
+      const res = await fetch(`https://api.github.com/repos/${githubRepo}/contents/content.json`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${githubToken}`,
+          'Content-Type': 'application/json',
+          Accept: 'application/vnd.github.v3+json',
+        },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || 'Erro ao publicar.');
+      }
+      const data = await res.json();
+      contentSha = data.content.sha;
+      showToast('Publicado! O site será atualizado em ~1 minuto.', 'success');
+    } catch (e) {
+      showToast('Erro: ' + e.message, 'error');
+    }
+  }
+
+  // ── IMAGES ──
+  function handleImage(input, key, previewId) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const b64 = e.target.result;
+      state.imagens = state.imagens || {};
+      state.imagens[key] = b64;
+      const pr = document.getElementById(previewId);
+      pr.src = b64; pr.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ── TOAST ──
+  function showToast(msg, type='success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  function showAdmin() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+  }
+
+  // ── INIT ──
+  window.onload = () => {
+    const savedToken = localStorage.getItem('sc_token');
+    const savedRepo  = localStorage.getItem('sc_repo');
+    if (savedToken && savedRepo) {
+      githubToken = savedToken;
+      githubRepo  = savedRepo;
+      document.getElementById('inp-token').value = savedToken;
+      document.getElementById('inp-repo').value  = savedRepo;
+      loadFromGithub();
+    }
+  };
+</script>
+</body>
+</html>

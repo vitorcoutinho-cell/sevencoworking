@@ -1,0 +1,40 @@
+{
+  "hero": {
+    "badge": "Business Center · 7º Andar · Maringá-PR",
+    "title": "Seu escritório profissional em Maringá.",
+    "subtitle": "Salas de reunião, salas privativas e endereço fiscal para empresas que valorizam credibilidade, praticidade e estrutura profissional.",
+    "btn_primary": "Agendar Visita",
+    "btn_secondary": "Solicitar Informações",
+    "stat1_num": "7º",
+    "stat1_label": "Andar corporativo",
+    "stat2_num": "3",
+    "stat2_label": "Soluções disponíveis",
+    "stat3_num": "100%",
+    "stat3_label": "Ambiente premium"
+  },
+  "sobre": {
+    "label": "Nossa história",
+    "title": "Mais do que um coworking.",
+    "text1": "O Seven Coworking nasceu para oferecer algo que vai além de uma mesa compartilhada. Criamos uma estrutura empresarial completa, sob demanda, para profissionais e empresas que precisam de credibilidade sem os custos fixos de um escritório próprio.",
+    "text2": "Localizado no sétimo andar de um edifício corporativo em Maringá, o Seven Coworking combina localização estratégica, ambiente sofisticado e infraestrutura de alto padrão para que você feche mais negócios com mais confiança."
+  },
+  "servicos": {
+    "s1_title": "Sala de Reunião",
+    "s1_desc": "Ambiente moderno e equipado para impressionar clientes e parceiros. Locação por hora ou diária com toda a infraestrutura necessária.",
+    "s2_title": "Sala Privativa",
+    "s2_desc": "Espaço exclusivo e reservado para atendimentos confidenciais, consultorias e reuniões estratégicas. Locação por diária com privacidade total.",
+    "s3_title": "Endereço Fiscal",
+    "s3_desc": "Formalize sua empresa com um endereço empresarial premium em Maringá. Credibilidade e estrutura para sua operação sem as despesas de um escritório fixo."
+  },
+  "contato": {
+    "whatsapp": "5544999999999",
+    "email": "contato@sevencoworking.com.br",
+    "instagram": "sevencoworking",
+    "endereco": "7º Andar, Edifício Corporativo, Maringá – PR",
+    "telefone": "(44) 9 9999-9999"
+  },
+  "imagens": {
+    "hero": "",
+    "sobre": ""
+  }
+}
