@@ -211,6 +211,10 @@
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.07 8.63a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
           Contato & Redes
         </div>
+        <div class="nav-item" onclick="showPanel('blog', this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          Blog
+        </div>
       </div>
     </div>
 
@@ -401,6 +405,99 @@
             <textarea id="contato.endereco"></textarea>
           </div>
         </div>
+      <!-- BLOG -->
+      <div class="section-panel" id="panel-blog">
+        <div class="panel-title">Blog</div>
+        <div class="panel-subtitle">Edite os 3 artigos exibidos na seção de blog do site.</div>
+
+        <div class="card" id="blog-card-0">
+          <h3>Artigo 1</h3>
+          <div class="form-field">
+            <label>Título</label>
+            <input type="text" id="blog.0.titulo" />
+          </div>
+          <div class="form-field">
+            <label>Resumo (aparece no card)</label>
+            <textarea id="blog.0.resumo" style="min-height:70px"></textarea>
+          </div>
+          <div class="form-field">
+            <label>Texto completo do artigo</label>
+            <textarea id="blog.0.texto" style="min-height:160px"></textarea>
+          </div>
+          <div class="form-field">
+            <label>Data</label>
+            <input type="text" id="blog.0.data" placeholder="23 de junho de 2026" />
+          </div>
+          <div class="form-field">
+            <label>Foto do artigo</label>
+            <img class="img-preview" id="preview-blog-0" />
+            <div class="img-upload-area" onclick="document.getElementById('file-blog-0').click()">
+              <input type="file" id="file-blog-0" accept="image/*" onchange="handleBlogImage(this, 0, 'preview-blog-0')" />
+              <svg width="28" height="28" fill="none" stroke="#B8993A" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <p><strong>Clique para selecionar</strong> — JPG, PNG ou WebP</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="blog-card-1">
+          <h3>Artigo 2</h3>
+          <div class="form-field">
+            <label>Título</label>
+            <input type="text" id="blog.1.titulo" />
+          </div>
+          <div class="form-field">
+            <label>Resumo (aparece no card)</label>
+            <textarea id="blog.1.resumo" style="min-height:70px"></textarea>
+          </div>
+          <div class="form-field">
+            <label>Texto completo do artigo</label>
+            <textarea id="blog.1.texto" style="min-height:160px"></textarea>
+          </div>
+          <div class="form-field">
+            <label>Data</label>
+            <input type="text" id="blog.1.data" placeholder="20 de junho de 2026" />
+          </div>
+          <div class="form-field">
+            <label>Foto do artigo</label>
+            <img class="img-preview" id="preview-blog-1" />
+            <div class="img-upload-area" onclick="document.getElementById('file-blog-1').click()">
+              <input type="file" id="file-blog-1" accept="image/*" onchange="handleBlogImage(this, 1, 'preview-blog-1')" />
+              <svg width="28" height="28" fill="none" stroke="#B8993A" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <p><strong>Clique para selecionar</strong> — JPG, PNG ou WebP</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="blog-card-2">
+          <h3>Artigo 3</h3>
+          <div class="form-field">
+            <label>Título</label>
+            <input type="text" id="blog.2.titulo" />
+          </div>
+          <div class="form-field">
+            <label>Resumo (aparece no card)</label>
+            <textarea id="blog.2.resumo" style="min-height:70px"></textarea>
+          </div>
+          <div class="form-field">
+            <label>Texto completo do artigo</label>
+            <textarea id="blog.2.texto" style="min-height:160px"></textarea>
+          </div>
+          <div class="form-field">
+            <label>Data</label>
+            <input type="text" id="blog.2.data" placeholder="15 de junho de 2026" />
+          </div>
+          <div class="form-field">
+            <label>Foto do artigo</label>
+            <img class="img-preview" id="preview-blog-2" />
+            <div class="img-upload-area" onclick="document.getElementById('file-blog-2').click()">
+              <input type="file" id="file-blog-2" accept="image/*" onchange="handleBlogImage(this, 2, 'preview-blog-2')" />
+              <svg width="28" height="28" fill="none" stroke="#B8993A" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <p><strong>Clique para selecionar</strong> — JPG, PNG ou WebP</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       </div>
 
     </div>
@@ -482,6 +579,17 @@
       const pr = document.getElementById('preview-sobre');
       pr.src = state.imagens.sobre; pr.style.display = 'block';
     }
+    // blog
+    (state.blog || []).forEach((post, i) => {
+      ['titulo','resumo','texto','data'].forEach(f => {
+        const el = document.getElementById(`blog.${i}.${f}`);
+        if (el) el.value = post[f] || '';
+      });
+      if (post.imagem) {
+        const pr = document.getElementById(`preview-blog-${i}`);
+        if (pr) { pr.src = post.imagem; pr.style.display = 'block'; }
+      }
+    });
   }
 
   function collectFields() {
@@ -510,6 +618,29 @@
       instagram: get('contato.instagram'), endereco: get('contato.endereco'),
       telefone: get('contato.telefone'),
     };
+    // blog
+    state.blog = (state.blog || [{},{},{}]).map((post, i) => ({
+      id: post.id || (i + 1),
+      titulo: get(`blog.${i}.titulo`),
+      resumo:  get(`blog.${i}.resumo`),
+      texto:   get(`blog.${i}.texto`),
+      data:    get(`blog.${i}.data`),
+      imagem:  post.imagem || '',
+    }));
+  }
+
+  function handleBlogImage(input, index, previewId) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      state.blog = state.blog || [{},{},{}];
+      state.blog[index] = state.blog[index] || {};
+      state.blog[index].imagem = e.target.result;
+      const pr = document.getElementById(previewId);
+      if (pr) { pr.src = e.target.result; pr.style.display = 'block'; }
+    };
+    reader.readAsDataURL(file);
   }
 
   function saveContent() {
