@@ -161,20 +161,12 @@
     <div class="login-logo">SEVEN<span>COWORKING</span></div>
     <br/>
     <h2>Painel Administrativo</h2>
-    <p>Para editar o site, entre com seu Token do GitHub. Ele permite salvar as alterações diretamente.</p>
+    <p>Digite a senha para acessar o painel de edição do site.</p>
     <div class="field">
-      <label>Repositório GitHub</label>
-      <input type="text" id="inp-repo" placeholder="vitorcoutinho-cell/sevencoworking" value="vitorcoutinho-cell/sevencoworking" />
+      <label>Senha</label>
+      <input type="password" id="inp-token" placeholder="••••••••••" onkeydown="if(event.key==='Enter')doLogin()" />
     </div>
-    <div class="field">
-      <label>Token de Acesso (GitHub Personal Access Token)</label>
-      <input type="password" id="inp-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
-      <small>Seus dados ficam salvos apenas no seu navegador.</small>
-    </div>
-    <button class="btn-login" onclick="doLogin()">Entrar no Painel</button>
-    <div class="login-help">
-      Não tem um token? <a href="https://github.com/settings/tokens/new?scopes=repo&description=SevenCoworking+Admin" target="_blank">Clique aqui para criar</a> — selecione o escopo <strong>repo</strong> e clique em "Generate token".
-    </div>
+    <button class="btn-login" onclick="doLogin()">Entrar</button>
   </div>
 </div>
 
@@ -420,23 +412,19 @@
 
 <script>
   let state = {};
-  let githubToken = '';
-  let githubRepo = '';
   let contentSha = '';
 
-  // ── AUTH ──
+  // ── AUTH — senha simples local ──
+  const ADMIN_PASS = localStorage.getItem('sc_adminpass') || '';
+
   function doLogin() {
-    githubToken = document.getElementById('inp-token').value.trim();
-    githubRepo  = document.getElementById('inp-repo').value.trim();
-    if (!githubToken || !githubRepo) { showToast('Preencha todos os campos.', 'error'); return; }
-    localStorage.setItem('sc_token', githubToken);
-    localStorage.setItem('sc_repo',  githubRepo);
+    const pass = document.getElementById('inp-token').value.trim();
+    if (!pass) { showToast('Digite a senha.', 'error'); return; }
+    localStorage.setItem('sc_adminpass', pass);
     loadFromGithub();
   }
 
   function doLogout() {
-    localStorage.removeItem('sc_token');
-    localStorage.removeItem('sc_repo');
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('admin-screen').style.display = 'none';
   }
@@ -450,15 +438,22 @@
   }
 
   // ── LOAD ──
+  function getPass() { return localStorage.getItem('sc_adminpass') || ''; }
+
   async function loadFromGithub() {
     try {
-      const res = await fetch(`https://api.github.com/repos/${githubRepo}/contents/content.json`, {
-        headers: { Authorization: `token ${githubToken}`, Accept: 'application/vnd.github.v3+json' }
+      const res = await fetch('/api/content', {
+        headers: { 'X-Admin-Password': getPass() }
       });
-      if (!res.ok) throw new Error('Não foi possível carregar o conteúdo do GitHub.');
+      if (res.status === 401) {
+        localStorage.removeItem('sc_adminpass');
+        showToast('Senha incorreta.', 'error');
+        return;
+      }
+      if (!res.ok) throw new Error('Não foi possível carregar o conteúdo.');
       const data = await res.json();
       contentSha = data.sha;
-      state = JSON.parse(atob(data.content.replace(/\n/g, '')));
+      state = data.content;
       populateFields();
       showAdmin();
     } catch (e) {
@@ -526,27 +521,17 @@
   async function publishContent() {
     collectFields();
     try {
-      const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
-      const body = {
-        message: 'Admin: atualiza conteúdo do site',
-        content,
-        sha: contentSha,
-      };
-      const res = await fetch(`https://api.github.com/repos/${githubRepo}/contents/content.json`, {
+      const res = await fetch('/api/content', {
         method: 'PUT',
-        headers: {
-          Authorization: `token ${githubToken}`,
-          'Content-Type': 'application/json',
-          Accept: 'application/vnd.github.v3+json',
-        },
-        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPass() },
+        body: JSON.stringify({ content: state, sha: contentSha }),
       });
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.message || 'Erro ao publicar.');
+        throw new Error(err.error || 'Erro ao publicar.');
       }
       const data = await res.json();
-      contentSha = data.content.sha;
+      contentSha = data.sha;
       showToast('Publicado! O site será atualizado em ~1 minuto.', 'success');
     } catch (e) {
       showToast('Erro: ' + e.message, 'error');
@@ -584,15 +569,8 @@
 
   // ── INIT ──
   window.onload = () => {
-    const savedToken = localStorage.getItem('sc_token');
-    const savedRepo  = localStorage.getItem('sc_repo');
-    if (savedToken && savedRepo) {
-      githubToken = savedToken;
-      githubRepo  = savedRepo;
-      document.getElementById('inp-token').value = savedToken;
-      document.getElementById('inp-repo').value  = savedRepo;
-      loadFromGithub();
-    }
+    const saved = localStorage.getItem('sc_adminpass');
+    if (saved) loadFromGithub();
   };
 </script>
 </body>
