@@ -9,7 +9,7 @@
     "stat1_label": "Andar corporativo",
     "stat2_num": "3",
     "stat2_label": "Soluções disponíveis",
-    "stat3_num": "100%",
+    "stat3_num": "00%",
     "stat3_label": "Ambiente premium"
   },
   "sobre": {
@@ -43,24 +43,24 @@
       "titulo": "Por que ter um endereço comercial faz diferença para o seu negócio",
       "resumo": "Um endereço profissional transmite credibilidade, facilita o registro da empresa e impressiona clientes desde o primeiro contato. Entenda por que isso importa.",
       "texto": "Um endereço comercial vai muito além de uma localização. Ele representa a identidade da sua empresa perante clientes, fornecedores e o mercado. Ter um endereço em um edifício corporativo de alto padrão transmite seriedade e profissionalismo sem que você precise arcar com os altos custos de um escritório próprio.\n\nAlém da imagem, um endereço fiscal é essencial para a formalização do negócio: abertura de CNPJ, emissão de notas fiscais e credenciamento junto a parceiros. No Seven Coworking, você tem tudo isso com a praticidade de não precisar estar presente fisicamente todos os dias.",
-      "imagem": "",
-      "data": "23 de junho de 2026"
+      "data": "23 de junho de 2026",
+      "imagem": ""
     },
     {
       "id": 2,
       "titulo": "Sala de reunião por hora: a solução inteligente para fechar mais negócios",
       "resumo": "Reuniões em cafés ou home office podem custar negócios. Descubra como um espaço profissional muda a percepção do seu cliente na hora H.",
       "texto": "A primeira impressão importa — e o ambiente onde você recebe seu cliente diz muito sobre o seu negócio. Uma sala de reunião bem equipada, climatizada e silenciosa transmite organização, preparo e profissionalismo.\n\nNo Seven Coworking, você aluga a sala apenas quando precisa: por hora ou por dia. Sem mensalidade fixa, sem desperdício. Ideal para apresentações comerciais, entrevistas, treinamentos ou qualquer reunião que exija um ambiente adequado.",
-      "imagem": "",
-      "data": "20 de junho de 2026"
+      "data": "20 de junho de 2026",
+      "imagem": ""
     },
     {
       "id": 3,
       "titulo": "Coworking em Maringá: o novo modelo de trabalho dos profissionais de alto desempenho",
       "resumo": "Flexibilidade, networking e estrutura de qualidade. Veja por que profissionais liberais e consultores estão escolhendo o modelo sob demanda.",
       "texto": "O mercado mudou. Profissionais de alta performance — advogados, médicos, consultores e representantes — perceberam que pagar por um escritório fixo não faz mais sentido quando existe uma alternativa mais inteligente.\n\nO coworking sob demanda permite que você tenha toda a estrutura de um escritório corporativo apenas quando realmente precisa. No Seven Coworking, você encontra ambiente premium, localização estratégica no 7º andar do Ed. Le Monde em Maringá, e a flexibilidade de reservar com antecedência pelo WhatsApp.",
-      "imagem": "",
-      "data": "15 de junho de 2026"
+      "data": "15 de junho de 2026",
+      "imagem": ""
     }
   ]
 }
