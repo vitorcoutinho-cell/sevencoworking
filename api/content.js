@@ -16,15 +16,11 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // Validate admin password
-  const pass = req.headers['x-admin-password'];
-  if (!pass || pass !== PASSWORD) {
-    return res.status(401).json({ error: 'Senha incorreta.' });
-  }
-
   const url = `https://api.github.com/repos/${REPO}/contents/${FILE}`;
 
   if (req.method === 'GET') {
+    // GET é público — não requer senha
+
     const r = await fetch(url, { headers: ghHeaders });
     if (!r.ok) return res.status(r.status).json({ error: 'Erro ao ler conteúdo' });
     const data = await r.json();
@@ -33,6 +29,11 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'PUT') {
+    // PUT requer senha de admin
+    const pass = req.headers['x-admin-password'];
+    if (!pass || pass !== PASSWORD) {
+      return res.status(401).json({ error: 'Senha incorreta.' });
+    }
     const { content, sha } = req.body;
     const encoded = Buffer.from(JSON.stringify(content, null, 2)).toString('base64');
     const r = await fetch(url, {

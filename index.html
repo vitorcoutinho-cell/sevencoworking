@@ -1341,9 +1341,10 @@
 
   async function loadContent() {
     try {
-      const r = await fetch('/content.json?v=' + Date.now());
+      const r = await fetch('/api/content?v=' + Date.now());
       if (!r.ok) return;
-      const c = await r.json();
+      const data = await r.json();
+      const c = data.content || data;
 
       // Hero
       set('c-hero-badge',    c.hero?.badge);
