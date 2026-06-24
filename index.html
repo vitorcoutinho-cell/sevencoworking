@@ -1427,10 +1427,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       // Blog
+      window._blogPosts = c.blog;
       const grid = document.getElementById('blog-grid');
       if (grid && Array.isArray(c.blog)) {
         grid.innerHTML = c.blog.map((post, i) => `
-          <div class="reveal reveal-delay-${i+1}" style="background:var(--white);border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,0.07);transition:transform 0.3s,box-shadow 0.3s;cursor:pointer;" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 48px rgba(0,0,0,0.13)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div class="reveal reveal-delay-${i+1}" style="background:var(--white);border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,0.07);transition:transform 0.3s,box-shadow 0.3s;cursor:pointer;" onclick="openBlogModal(${i})" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 48px rgba(0,0,0,0.13)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
             ${post.imagem ? `<div style="height:200px;overflow:hidden;"><img src="${post.imagem}" alt="${post.titulo}" style="width:100%;height:100%;object-fit:cover;"></div>` : `<div style="height:200px;background:var(--gray-100);display:flex;align-items:center;justify-content:center;"><svg width="40" height="40" fill="none" stroke="#B8993A" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>`}
             <div style="padding:28px;">
               <span style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">${post.data}</span>
@@ -1446,7 +1447,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     } catch(e) { console.warn('content.json:', e); }
   }
   loadContent();
+
+  function openBlogModal(i) {
+    const post = (window._blogPosts || [])[i];
+    if (!post) return;
+    const paragraphs = post.texto.split('\n\n').map(p => `<p style="margin-bottom:18px;line-height:1.8;color:#3a3a3a;">${p}</p>`).join('');
+    const img = post.imagem ? `<img src="${post.imagem}" alt="${post.titulo}" style="width:100%;max-height:340px;object-fit:cover;border-radius:12px;margin-bottom:28px;">` : '';
+    document.getElementById('blog-modal').innerHTML = `
+      <div onclick="closeBlogModal()" style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;">
+        <div onclick="event.stopPropagation()" style="background:#fff;border-radius:20px;max-width:720px;width:100%;padding:40px;position:relative;">
+          <button onclick="closeBlogModal()" style="position:absolute;top:20px;right:20px;background:none;border:none;cursor:pointer;font-size:1.4rem;color:#6b6b6b;">✕</button>
+          <span style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#B8993A;">${post.data}</span>
+          <h2 style="font-size:1.5rem;font-weight:800;color:#0A0A0A;margin:12px 0 24px;line-height:1.3;letter-spacing:-0.03em;">${post.titulo}</h2>
+          ${img}
+          ${paragraphs}
+          <a href="https://wa.me/5544984564278" target="_blank" style="display:inline-flex;align-items:center;gap:10px;margin-top:12px;padding:14px 28px;background:#B8993A;color:#fff;border-radius:10px;font-weight:700;text-decoration:none;font-size:0.9rem;">Agendar visita pelo WhatsApp →</a>
+        </div>
+      </div>`;
+    document.getElementById('blog-modal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeBlogModal() {
+    document.getElementById('blog-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBlogModal(); });
 </script>
+
+<div id="blog-modal" style="display:none;"></div>
 
 </body>
 </html>
